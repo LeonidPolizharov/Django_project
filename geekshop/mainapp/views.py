@@ -8,7 +8,7 @@ MENU_LINKS = {
     'contact': 'Контакты',
 }
 
-# Create your views here.
+
 def index(request):
     return render(request, 'mainapp/index.html', context={
       'title': 'Главная',
@@ -19,8 +19,10 @@ def index(request):
 def products(request):
     categories = Category.objects.all()
     products = Product.objects.all()
-    # with open('E:/Django_project/geekshop/products.json', 'r', encoding='utf-8') as f:
+    # with open('/products.json', 'r', encoding='utf-8') as f:
     #    products = json.load(f)
+    # этот код не удаляю, оставляю для себя, чтобы не забыть про возможность 
+    # грузить из файла
     return render(request, 'mainapp/products.html', context={
       'title': 'Продукты',
       'menu': MENU_LINKS,

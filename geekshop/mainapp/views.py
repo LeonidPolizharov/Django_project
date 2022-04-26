@@ -1,5 +1,6 @@
 from django.shortcuts import render
-import json
+# import json
+from .models import Category, Product
 
 MENU_LINKS = {
     'index': 'Главная',
@@ -7,26 +8,31 @@ MENU_LINKS = {
     'contact': 'Контакты',
 }
 
-# Create your views here.
+
 def index(request):
     return render(request, 'mainapp/index.html', context={
-        'title': 'Главная',
-        'menu': MENU_LINKS,
-         })
+      'title': 'Главная',
+      'menu': MENU_LINKS,
+       })
 
     
 def products(request):
-    with open('E:/Django_project/geekshop/products.json', 'r', encoding='utf-8') as f:
-        products = json.load(f)
+    categories = Category.objects.all()
+    products = Product.objects.all()
+    # with open('/products.json', 'r', encoding='utf-8') as f:
+    #    products = json.load(f)
+    # этот код не удаляю, оставляю для себя, чтобы не забыть про возможность 
+    # грузить из файла
     return render(request, 'mainapp/products.html', context={
-        'title': 'Продукты',
-        'menu': MENU_LINKS,
-        'products': products
-        })
+      'title': 'Продукты',
+      'menu': MENU_LINKS,
+      'products': products,
+      'categories': categories,
+      })
 
 
 def contact(request):
     return render(request, 'mainapp/contact.html', context={
-        'title': 'Контакты',
-        'menu': MENU_LINKS,
-        })
+      'title': 'Контакты',
+      'menu': MENU_LINKS,
+      })

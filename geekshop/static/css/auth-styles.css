@@ -1,0 +1,14 @@
+.content {
+    max-height: 1060px;
+    padding: 1em 2em;
+}
+
+.user-image {
+    max-width: 1060px;
+}
+
+.button-secondary {
+    color: white;
+    border-radius: 4px;
+    background: rgb(66, 184, 221);
+}

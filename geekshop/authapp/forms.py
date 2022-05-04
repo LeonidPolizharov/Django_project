@@ -22,7 +22,7 @@ class UserEditForm(UserChangeForm):
     def clean_city(self):
         if self.cleaned_data["city"] != 'Москва':
             raise forms.ValidationError("Только Москва")
-        return self.cleaned_data
+        return self.cleaned_data["city"]
 
 
     

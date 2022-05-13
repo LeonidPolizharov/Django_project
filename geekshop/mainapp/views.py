@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseNotFound
 # import json
 from .models import Category, Product
+
 
 MENU_LINKS = {
     'index': 'Главная',
@@ -30,6 +32,19 @@ def products(request):
       'categories': categories,
       })
 
+
+def category(request, pk):
+    categories = Category.objects.all()
+    category = get_object_or_404(Category, id=pk)
+    products = Product.objects.filter(category=category).order_by('price')
+    return render(request, 'mainapp/category.html', context={
+        'title': 'Продукты',
+        'menu': MENU_LINKS,
+        'products': products,
+        'category': category,
+        'categories': categories,
+        })
+        
 
 def contact(request):
     return render(request, 'mainapp/contact.html', context={

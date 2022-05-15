@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseNotFound
-# import json
+import random
 from .models import Category, Product
 
 
@@ -21,6 +21,8 @@ def index(request):
 def products(request):
     categories = Category.objects.all()
     products = Product.objects.all()
+    hot_product = random.choice(products)
+    products = products.exclude(pk=hot_product.pk)
     # with open('/products.json', 'r', encoding='utf-8') as f:
     #    products = json.load(f)
     # этот код не удаляю, оставляю для себя, чтобы не забыть про возможность 
@@ -28,10 +30,25 @@ def products(request):
     return render(request, 'mainapp/products.html', context={
       'title': 'Продукты',
       'menu': MENU_LINKS,
+      'hot_product': hot_product,
       'products': products,
       'categories': categories,
       })
 
+
+def product(request, pk):
+    categories = Category.objects.all()
+    product = get_object_or_404(Product, pk=pk)
+    return render(
+      request, 
+      'mainapp/product.html', 
+      context={
+        'title': product.name,
+        'menu': MENU_LINKS,
+        'product': product,
+        'category': product.category,
+        'categories': categories,
+      })
 
 def category(request, pk):
     categories = Category.objects.all()

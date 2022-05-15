@@ -2,7 +2,7 @@
 
 {% for product in products %}
 <div class="block">
-    <a href="{% url 'basket:add' product.id %}">
+    <a href="{% url 'product' product.id %}">
         {% if product.image %}
             <img src="{{ product.image.url }}" alt="" />
         {% else %}
@@ -10,7 +10,7 @@
         {% endif %}
         <div class="text">
         <img src="{% static 'img/icon-hover.png' %}" alt="img" />
-        <h4>{{ product.title|title }}</h4>
+        <h4>{{ product.name|title }}</h4>
         <p>{{ product.description|upper|truncatewords:10 }}</p>
         </div>
     </a>

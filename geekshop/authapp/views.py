@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib import auth
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from authapp.forms import LoginForm, RegisterForm, UserEditForm
-from authapp.models import ShopUser
+from django.contrib.auth.decorators import login_required
 
 
 def login(request):
@@ -18,7 +18,8 @@ def login(request):
             )
             if user:
                 auth.login(request, user=user)
-                return HttpResponseRedirect(reverse('index'))
+                redirect_url = request.GET.get('next', reverse('index'))
+                return HttpResponseRedirect(redirect_url)
 
     return render(request, 'authapp/login.html', context={
                 'title': 'Вход в систему',
@@ -44,7 +45,8 @@ def register(request):
                 'form': form
     })
 
-    
+
+@login_required
 def edit(request):
     form = UserEditForm(instance=request.user)
 

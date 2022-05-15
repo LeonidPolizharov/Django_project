@@ -1,7 +1,7 @@
-{% extends 'authapp/base.html' %}
-
+{% extends 'basketapp/base.html' %}
+{% load static %}
 {% block content %}
-{% for item in basket %}
-    <p>{{ item }} <a href="{% url 'basket:remove' item.id %}">Удалить</a></p>
-{% endfor %}
+<div class="basket_list">
+    {% include 'basketapp/includes/inc_basket_list.html' %}
+</div>
 {% endblock %}

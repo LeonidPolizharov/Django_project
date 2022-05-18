@@ -1,0 +1,43 @@
+{% extends 'adminapp/base.html' %}
+{% load static %}
+{% block content %}
+<div class='create-button'>
+    <a href="{% url 'admin:create_category' %}" class="pure-button pure-button-primary">
+        Создать категорию
+    </a>
+</div>
+<table class='pure-table'>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr class="{% if not category.is_active %} inactive {% endif %}">
+            <td>{{ category.name }}</td>
+            <td>{{ category.description }}</td>
+            <td>
+                <a href="{% url 'admin:products' category.pk %}" class="pure-button pure-button-primary">
+                    к товарам категории
+                </a>
+            </td>
+            <td>
+                <a href="{% url 'admin:update_category' category.pk %}" class="pure-button pure-button-primary">
+                    редактировать
+                </a>              
+            </td>
+            <td>
+                <a href="{% url 'admin:delete_category' category.pk %}" class="pure-button pure-button-primary">
+                    удалить
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            {% block title %}
+            {{ title }}
+            {% endblock %}
+        </title>
+        {% block css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/pure-min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/admin-styles.css' %}">
+        {% endblock %}
+        {% block js %}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="content">
+            <a class="pure-button button-secondary" href="{% url 'index' %}"><-На сайт</a>
+            <a class="pure-button button-secondary" href="{% url 'admin:users' %}">Пользователи</a>
+            <a class="pure-button button-secondary" href="{% url 'admin:categories' %}">Категории</a>
+            <h2>{{ title }}</h2>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>

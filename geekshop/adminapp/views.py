@@ -1,5 +1,10 @@
 from authapp.models import ShopUser
-from adminapp.forms import CategoryEditForm, RegisterForm, UserEditForm
+from adminapp.forms import (
+    CategoryEditForm,
+    ProductEditForm, 
+    RegisterForm, 
+    UserEditForm
+)
 from mainapp.models import Category, Product
 from django.contrib.auth.decorators import user_passes_test
 from django.http.response import HttpResponseRedirect
@@ -112,25 +117,60 @@ def delete_category(request, pk):
 
 
 @check_is_superuser
-def products(request, pk):
-    category = get_object_or_404(Category, pk=pk)
+def products(request, category_pk):
+    category = get_object_or_404(Category, pk=category_pk)
     return render(request, 'adminapp/products.html', context={
         'title': f'Категория: {category.name}',
-        'products': Product.objects.filter(category=category)
+        'products': Product.objects.filter(category=category),
+        'category': category
     })
 
 
 @check_is_superuser
-def create_product(request, pk):
-    pass
+def create_product(request, category_pk):
+    category = get_object_or_404(Category, pk=category_pk)
+    form = ProductEditForm(initial={'category': category})
+    if request.method =='POST':
+        form = ProductEditForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(
+                reverse('admin:products', args=[category_pk])
+            )
+
+    return render(request, 'adminapp/create_product.html', context={
+                'title': 'Создание продукта',
+                'category': category,
+                'form': form
+    })
 
 
 @check_is_superuser
-def update_product(request, pk):
-    pass
+def update_product(request, product_pk):
+    product = get_object_or_404(Product, pk=product_pk)
+    form = ProductEditForm(instance=product)
+    if request.method =='POST':
+        form = ProductEditForm(
+            instance=product,
+            data=request.POST,
+            files=request.FILES
+        )
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('admin:products', args=[product.category.pk]))
+
+    return render(request, 'adminapp/update_product.html', context={
+                'title': 'Редактирование продукта',
+                'product': product,
+                'form': form
+    })
+
 
 
 @check_is_superuser
-def delete_product(request, pk):
-    pass
+def delete_product(request, product_pk):
+    product = get_object_or_404(Product, pk=product_pk)
+    product.is_active = False
+    product.save()
+    return HttpResponseRedirect(reverse('admin:products', args=[product.category.pk]))
 

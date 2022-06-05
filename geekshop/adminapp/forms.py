@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 class RegisterForm(UserCreationForm):
     class Meta:
         model = ShopUser
-        exclude = ()
+        fields = ('username',)
 
 class UserEditForm(UserChangeForm):
     class Meta:

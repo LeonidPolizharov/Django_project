@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-jm^+7dm!35sp&pl75zcul-+1b)crktrf$-54q+ezwmut^sz_y#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.204', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.204', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -67,6 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mainapp.context_processors.menu_links',
+                'mainapp.context_processors.basket',
             ],
         },
     },
@@ -143,3 +145,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Data files
 DATA_ROOT = BASE_DIR / 'json'
+
+
+# Email
+EMAIL_FILE_PATH = './mails/'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+SITE_ADDRESS = 'http://localhost:8000/'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = '1025'
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''

@@ -4,6 +4,8 @@ from authapp.models import ShopUser
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 
+from .models import ShopUserProfile
+
 class LoginForm(AuthenticationForm):
     pass
 
@@ -31,4 +33,7 @@ class UserEditForm(UserChangeForm):
         return self.cleaned_data["city"]
 
 
-    
+class UserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = ShopUserProfile
+        fields = ('gender', 'about', )

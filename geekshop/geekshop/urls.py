@@ -21,10 +21,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('social/', include('social_django.urls', namespace='social')),
     path('admin/', include('adminapp.urls', namespace='admin')),
     path('auth/', include('authapp.urls', namespace='auth')),
+    
     path('basket/', include('basketapp.urls', namespace='basket')),
-
     path('', mainapp.index, name='index'),
     path('contact/', mainapp.contact, name='contact'),
     path('products/', mainapp.products, name='products'),

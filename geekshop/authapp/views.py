@@ -1,9 +1,10 @@
 from email import message
+from authapp.forms import LoginForm, RegisterForm, UserEditForm, UserProfileEditForm
 from django.shortcuts import redirect, render
 from django.contrib import auth
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse
-from authapp.forms import LoginForm, RegisterForm, UserEditForm
+from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from .utils import send_verification_mail
 from .models import ShopUser
@@ -69,21 +70,25 @@ def register(request):
     })
 
 
+@transaction.atomic
 @login_required
 def edit(request):
-    form = UserEditForm(instance=request.user)
-
+    user_form = UserEditForm(instance=request.user)
+    profile_form = UserProfileEditForm(instance=request.user.profile)
     if request.method =='POST':
-        form = UserEditForm(
+        user_form = UserEditForm(
             instance=request.user,
             data=request.POST,
             files=request.FILES
         )
-        if form.is_valid():
-            form.save()
+        profile_form = UserProfileEditForm(instance=request.user.profile, data=request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
             return HttpResponseRedirect(reverse('index'))
 
     return render(request, 'authapp/edit.html', context={
                 'title': 'Редактирование данных',
-                'form': form
+                'user_form': user_form,
+                'profile_form': profile_form
     })

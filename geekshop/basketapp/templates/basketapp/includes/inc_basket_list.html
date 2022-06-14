@@ -8,13 +8,16 @@
     <span class="product_price">{{ item.product.price }}&nbspруб</span>
     <input type="number" name="{{ item.pk }}"
     min="0"
+    max="{{ item.product.quantity }}"
     value="{{ item.quantity }}">
     <span class="product_cost">{{ item.cost }}&nbspруб</span>
+    <span class="product_quantity">(На складе {{ item.product.quantity }} шт.)</span>
     <a href="{% url 'basket:remove' item.pk %}" class="pure-button pure-button-primary">
         удалить
     </a>
 </div>
 {% endfor %}
+
 {% if basket.all %}
 <div class="basket-summary">
     В корзине {{ basket.quantity }} товаров общей стоимостью

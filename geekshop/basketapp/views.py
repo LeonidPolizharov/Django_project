@@ -1,3 +1,4 @@
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse
@@ -20,14 +21,17 @@ def add(request, product_id):
     if basket:
         basket_item = basket[0]
         basket_item.quantity += 1
-        basket_item.save()
     else:
         basket_item = Basket(user=request.user, product=product)
+
+    if basket_item.quantity <= product.quantity:
         basket_item.save()
+        
     if 'next' in request.META.get('HTTP_REFERER'):
         redirect_url = reverse('index')
     else:
         redirect_url = request.META.get('HTTP_REFERER', reverse('index'))
+
     return HttpResponseRedirect(redirect_url)
 
 

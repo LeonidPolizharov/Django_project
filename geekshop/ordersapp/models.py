@@ -1,6 +1,7 @@
-from importlib.metadata import PathDistribution
 from django.contrib.auth import get_user_model
-from django.db import models
+from django.db import models, transaction
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from mainapp.models import Product
 
 
@@ -56,3 +57,14 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.product} - {self.quantity} шт.'
+
+@receiver(pre_save, sender=OrderItem)
+def update_product_quantity(sender, instance, **kwargs):
+    old_order_item = OrderItem.objects.filter(pk=instance.pk).first()
+    if old_order_item:
+        quantity_delta = instance.quantity - old_order_item.quantity
+        instance.product.quantity -= quantity_delta
+    else:
+        instance.product.quantity -= instance.quantity
+
+    instance.product.save()

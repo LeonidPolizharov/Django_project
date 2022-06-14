@@ -1,10 +1,9 @@
-from multiprocessing import context
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.forms import inlineformset_factory
 
-from ordersapp.forms import OrderItemForm
+from ordersapp.forms import OrderItemForm, OrderItemFormset
 from ordersapp.models import Order, OrderItem
 from django.contrib.auth.decorators import login_required
 from utils.mixins import LoginRequiredMixin, TitleMixin
@@ -24,8 +23,9 @@ class OrderListView(LoginRequiredMixin, TitleMixin, ListView):
 @login_required
 @transaction.atomic
 def create_order(request):
-    basket_items = request.user.basket.all()
-    if not basket_items:
+    basket = request.user.basket
+    basket_items = basket.all()
+    if not basket_items or not basket_items.can_create_order():
         return HttpResponseBadRequest()
 
     order = Order(user=request.user)
@@ -69,17 +69,33 @@ class OrderUpdateView(LoginRequiredMixin, TitleMixin, UpdateView):
     fields = ()
 
     def get_context_data(self, **kwargs):
-        OrderItemFormset = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=2)
-        formset = OrderItemFormset(instance=self.object)
+        formset = kwargs.get('formset', OrderItemFormset(instance=self.object))
         context = super().get_context_data(**kwargs)
+        
+        for form in formset:
+            if form.initial:
+                form.initial['product_price'] = form.instance.product.price
+                form.initial['summary'] = form.instance.product.price * form.instance.quantity
+
         context['orderitems'] = formset
         return context
 
-    @transaction.atomic
-    def form_valid(self, form):
-        OrderItemFormset = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=2)
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
         formset = OrderItemFormset(self.request.POST, instance=self.object)
-        if formset.is_valid():
-            formset.save()
-            
+        if form.is_valid() and formset.is_valid():
+            return self.form_valid(form, formset)
+        else:
+            return self.form_invalid(form, formset)
+
+    @transaction.atomic
+    def form_valid(self, form, formset):
+        self.object = form.save()
+        formset.save()
         return super().form_valid(form)
+
+    def form_invalid(self, form, formset):
+        return self.render_to_response(
+            self.get_context_data(form=form, formset=formset)
+        )

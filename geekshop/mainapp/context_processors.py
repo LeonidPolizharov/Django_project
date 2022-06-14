@@ -6,9 +6,3 @@ def menu_links(request):
             'contact': 'Контакты',
         }
     }
-
-
-def basket(request):
-    return {
-        'basket': getattr(request.user, 'basket', None)
-    }

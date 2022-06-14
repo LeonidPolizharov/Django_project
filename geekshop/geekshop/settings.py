@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-jm^+7dm!35sp&pl75zcul-+1b)crktrf$-54q+ezwmut^sz_y#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.204', '127.0.0.1', 'localhost']
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'authapp',
     'basketapp',
     'adminapp',
+    'ordersapp',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +76,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'mainapp.context_processors.menu_links',
-                'mainapp.context_processors.basket',
+                'basketapp.context_processors.basket',
             ],
         },
     },

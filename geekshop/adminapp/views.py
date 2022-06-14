@@ -10,24 +10,10 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
+from utils.decorators import check_is_superuser
 from django.views.generic import ListView, CreateView, UpdateView
-from django.utils.decorators import method_decorator
-from adminapp.utils import check_is_superuser
+from utils.mixins import SuperuserRequiredMixin, TitleMixin
 
-
-class TitleMixin:
-    title = None
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = self.title
-        return context
-
-
-class SuperuserRequiredMixin:
-    @method_decorator(check_is_superuser)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-   
 
 class UserListView(SuperuserRequiredMixin, TitleMixin, ListView):
     template_name = 'adminapp/users.html'

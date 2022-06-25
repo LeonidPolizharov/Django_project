@@ -10,9 +10,7 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 import os
 
 from django.core.asgi import get_asgi_application
-import dotenv
 
-dotenv.read_dotenv()
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geekshop.settings')
 
 application = get_asgi_application()

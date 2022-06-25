@@ -13,8 +13,8 @@ def index(request):
 
     
 def products(request):
-    categories = Category.objects.all()
-    products = Product.objects.all()
+    categories = Category.objects.filter(is_active=True)
+    products = Product.objects.filter(is_active=True)
     hot_product = random.choice(products)
     products = products.exclude(pk=hot_product.pk)
     # with open('/products.json', 'r', encoding='utf-8') as f:
@@ -30,7 +30,7 @@ def products(request):
 
 
 def product(request, pk):
-    categories = Category.objects.all()
+    categories = Category.objects.filter(is_active=True)
     product = get_object_or_404(Product, pk=pk)
     return render(
       request, 

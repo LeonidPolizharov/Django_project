@@ -25,9 +25,6 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.id}: {self.name}'
 
-    def can_add_to_basket(self, user):
-        pass
-
 
 @receiver(pre_save, sender=Category)
 def update_product_is_active(sender, instance, **kwargs):

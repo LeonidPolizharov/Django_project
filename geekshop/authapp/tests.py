@@ -1,3 +1,7 @@
 from django.test import TestCase
+from factory.django import DjangoModelFactory
 
-# Create your tests here.
+
+class ShopUserFactory(DjangoModelFactory):
+    class Mets:
+        model = 'authapp.ShopUser'

@@ -8,14 +8,15 @@ class TestMainappPages(TestCase):
 
     def setUp(self):
         self.client = Client()
-        category = Category(name='test')
-        category.save()
-        product = Product(category=category, name='test')
-        product.save()
+        self.category = Category(name='test')
+        self.category.save()
+        self.product = Product(category=self.category, name='test')
+        self.product.save()
 
     def test_index_page(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
+        self.assertInHTML('<title>Главная</title>', response.content.decode('utf-8'))
 
     def test_contact_page(self):
         response = self.client.get('/contact')
@@ -23,4 +24,8 @@ class TestMainappPages(TestCase):
 
     def test_products_page(self):
         response = self.client.get('/products', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_category_page(self):
+        response = self.client.get(f'/products/{self.category.pk}/', follow=True)
         self.assertEqual(response.status_code, 200)

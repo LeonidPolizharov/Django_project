@@ -33,6 +33,7 @@ urlpatterns = [
     path('products/', mainapp.products, name='products'),
     path('products/<int:pk>/', mainapp.category, name='category'),
     path('products/<int:pk>/<int:page>/', mainapp.category, name='category'),
+    path('products/<int:pk>/<int:page>/products/', mainapp.category_products, name='category_products'),
     path('product/<int:pk>/', mainapp.product, name='product'),
 ]
 

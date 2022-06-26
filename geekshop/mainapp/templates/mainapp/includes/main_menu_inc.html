@@ -1,6 +1,5 @@
 {% load cache %}
 
-{% cache 3600 page_main_menu request.user.username %}
 <div class="header clearfix">
     <a href="{% url 'index' %}" class="logo"></a>
     <ul class="menu">
@@ -32,4 +31,3 @@
       </ul>
     <a href="#" class="search"></a>
 </div>
-{% endcache %}

@@ -76,6 +76,7 @@ def category(request, pk, page=1):
 
 
 @cache_page(3600)
+# @cached_property
 def category_products(request, pk, page=1):
     category = get_object_or_404(Category, id=pk)
     products = Product.objects.filter(category=category).order_by('price')

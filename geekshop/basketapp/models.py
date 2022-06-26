@@ -1,12 +1,15 @@
+from functools import cached_property
 from django.db import models
 from mainapp.models import Product
 from django.contrib.auth import get_user_model
 
 
 class BasketManager(models.Manager):
+    @cached_property
     def quantity(self):
         return sum(item.quantity for item in self.all())
 
+    @cached_property
     def sum(self):
         return sum(item.product.price * item.quantity for item in self.all())
 

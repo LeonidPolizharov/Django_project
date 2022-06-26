@@ -1,3 +1,4 @@
+from email.policy import default
 from authapp.models import ShopUser
 from mainapp.models import Category, Product
 from django.forms.widgets import HiddenInput
@@ -30,3 +31,12 @@ class ProductEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].widget = HiddenInput()
+
+
+class DiscountForm(forms.Form):
+    discount = forms.DecimalField(
+        max_value=100, 
+        min_value=0,
+        decimal_places=2, 
+        required=True
+    )

@@ -6,12 +6,20 @@
         Создать продукт
     </a>
 </div>
+<form class="pure-form" action="{% url 'admin:make_discount' category.pk %}" method="post">
+    <fieldset>
+        {% csrf_token %}
+        {{ discount_form }}
+        <input class="pure-button pure-button-primary" type="submit" value="Применить скидку">
+    </fieldset>
+</form>
 <table class='pure-table'>
     <thead>
         <tr>
             <th>Name</th>
             <th>Description</th>
             <th>Quantity</th>
+            <th>Price</th>
             <th></th>
             <th></th>
         </tr>
@@ -22,6 +30,7 @@
             <td>{{ product.name }}</td>
             <td>{{ product.description }}</td>
             <td>{{ product.quantity }}</td>
+            <td>{{ product.price }}</td>
             <td>
                 <a href="{% url 'admin:update_product' product.pk %}" class="pure-button pure-button-primary">
                     редактировать

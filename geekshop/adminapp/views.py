@@ -1,9 +1,11 @@
+from dis import dis
 from authapp.models import ShopUser
 from adminapp.forms import (
     CategoryEditForm,
     ProductEditForm, 
     RegisterForm, 
-    UserEditForm
+    UserEditForm,
+    DiscountForm
 )
 from mainapp.models import Category, Product
 from django.contrib.auth.decorators import user_passes_test
@@ -12,6 +14,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from utils.decorators import check_is_superuser
 from django.views.generic import ListView, CreateView, UpdateView
+from django.db.models import F
 from utils.mixins import SuperuserRequiredMixin, TitleMixin
 
 
@@ -99,11 +102,24 @@ def delete_category(request, pk):
 @check_is_superuser
 def products(request, category_pk):
     category = get_object_or_404(Category, pk=category_pk)
+    discount_form = DiscountForm()
     return render(request, 'adminapp/products.html', context={
         'title': f'Категория: {category.name}',
         'products': Product.objects.filter(category=category),
+        'discount_form': discount_form,
         'category': category
     })
+
+
+@check_is_superuser
+def make_discount(request, category_pk):
+    discount_form = DiscountForm(request.POST)
+    if discount_form.is_valid():
+        discount_multiplier = (100 - discount_form.cleaned_data['discount']) / 100
+        Product.objects.filter(category__pk=category_pk).update(
+            price=F('price') * discount_multiplier
+        )
+    return HttpResponseRedirect(reverse('admin:products', args=[category_pk]))
 
 
 @check_is_superuser
